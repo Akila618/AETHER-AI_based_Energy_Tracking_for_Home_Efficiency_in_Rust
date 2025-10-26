@@ -2,8 +2,7 @@ use chrono::Utc;
 use home_utils::{ApplianceConfig, ApplianceState, HouseholdState, run_appliance};
 use reqwest::Client;
 use std::collections::HashMap;
-use std::sync::Arc;
-use tokio::sync::{mpsc, Mutex};
+use tokio::sync::mpsc;
 use tokio::time::{Duration, interval};
 
 #[tokio::main]
@@ -63,74 +62,54 @@ async fn main() {
 }
 
 async fn run_collector_dispatcher(
-    rx: mpsc::Receiver<ApplianceState>,
+    mut state_receiver: mpsc::Receiver<ApplianceState>,
     agent_url: String,
 ) {
     let client = Client::new();
 
-    // Shared, concurrent map holding the latest state for each appliance
-    let state_map: Arc<Mutex<HashMap<String, ApplianceState>>> = Arc::new(Mutex::new(HashMap::new()));
+    // This HashMap stores the *most recent* state of every appliance
+    let mut household_state_map: HashMap<String, ApplianceState> = HashMap::new();
 
-    // Receiver task: consumes incoming appliance states and updates the shared map
-    let receiver_map = Arc::clone(&state_map);
-    let mut receiver = rx;
-    let receiver_handle = tokio::spawn(async move {
-        while let Some(app_state) = receiver.recv().await {
-            let mut map = receiver_map.lock().await;
-            map.insert(app_state.id.clone(), app_state);
-            println!("[Collector] Received state update. Total appliances tracked: {}", map.len());
-        }
-        println!("[Collector] Channel closed, receiver exiting.");
-    });
+    // Send a bundled report to the agent every 5 seconds
+    let mut dispatch_timer = interval(Duration::from_secs(5));
+    loop {
+        tokio::select! {
+            Some(app_state) = state_receiver.recv() => {
 
-    // Dispatcher task: every interval snapshot the map and send a bundled report
-    let dispatcher_map = Arc::clone(&state_map);
-    let client_clone = client.clone();
-    let agent_url_clone = agent_url.clone();
-    let dispatcher_handle = tokio::spawn(async move {
-        let mut dispatch_timer = interval(Duration::from_secs(5));
-        loop {
-            dispatch_timer.tick().await;
-
-            // Take a snapshot of current appliance states
-            let appliances: Vec<ApplianceState> = {
-                let map = dispatcher_map.lock().await;
-                if map.is_empty() {
-                    Vec::new()
-                } else {
-                    map.values().cloned().collect()
-                }
-            };
-
-            if appliances.is_empty() {
-                println!("[Dispatcher] No state received yet. Skipping dispatch.");
-                continue;
+                household_state_map.insert(app_state.id.clone(), app_state);
+                println!("[Collector] Received state update. Total appliances tracked: {}", household_state_map.len());
+                println!("[Latest State] {:#?}", &household_state_map);
             }
 
-            let bundled_state = HouseholdState {
-                timestamp: Utc::now(),
-                appliances,
-            };
+            _ = dispatch_timer.tick() => {
+                if household_state_map.is_empty() {
+                    println!("[Dispatcher] No state received yet. Skipping dispatch.");
+                    continue;
+                }
 
-            match client_clone.post(&agent_url_clone).json(&bundled_state).send().await {
-                Ok(res) => {
-                    if !res.status().is_success() {
-                        eprintln!("[Dispatcher] Agent returned an error: {}", res.status());
+                println!("[Dispatcher] 5s timer ticked. Sending bundled state to agent...");
+
+                // Bundle all states from the map into a Vec
+                let appliances: Vec<ApplianceState> =
+                    household_state_map.values().cloned().collect();
+
+                let bundled_state = HouseholdState {
+                    timestamp: Utc::now(),
+                    appliances,
+                };
+
+                // --- Send the single, bundled report ---
+                match client.post(&agent_url).json(&bundled_state).send().await {
+                    Ok(res) => {
+                        if !res.status().is_success() {
+                            println!("[Dispatcher] Agent returned an error: {}", res.status());
+                        }
+                    },
+                    Err(e) => {
+                        println!("[Dispatcher] Failed to send state to agent: {}", e);
                     }
                 }
-                Err(e) => eprintln!("[Dispatcher] Failed to send state to agent: {}", e),
             }
         }
-    });
-
-    // Wait until the receiver task ends (e.g., channel closed). Then stop dispatcher.
-    if let Err(join_err) = receiver_handle.await {
-        eprintln!("Receiver task panicked: {}", join_err);
     }
-
-    // Shutdown dispatcher task gracefully
-    dispatcher_handle.abort();
-    let _ = dispatcher_handle.await;
-
-    println!("[Simulator] Collector/Dispatcher shut down.");
 }
