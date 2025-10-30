@@ -25,30 +25,24 @@ pub struct ApplianceConfig {
     pub id: String,
     pub name: String,
     pub base_watts: f64,
-    // How often this appliance updates its state (in ms)
     pub heartbeat_interval: u64,
 }
 
-pub async fn run_appliance(
-    config: ApplianceConfig,
-    state_sender: Sender<ApplianceState>,
-) {
-    // Create a thread-safe SmallRng seeded from the current system time (u64).
-    // This avoids OsRng/from_rng compatibility issues with older rand versions.
+pub async fn run_appliance( config: ApplianceConfig, state_sender: Sender<ApplianceState>) {
+    // Initialize a random number generator with a seed based on current time
     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     let seed = now.as_nanos() as u64;
     let mut rng = SmallRng::seed_from_u64(seed);
 
     // Internal state for this appliance
-    let mut is_on = true;
+    let is_on = true;
     let mut current_watts = 0.0;
 
     println!("[Simulator] {} simulation is starting...", config.name);
 
     loop {
-        // --- 2. Simulate Wattage Jitter ---
+        // ---  simulate Wattage change ---
         if is_on {
-            // Calculate jitter: e.g., +/- 5% of base_watts
             let change_percent = rng.random_range(-0.05..0.05);
             let change = config.base_watts * change_percent;
             current_watts = config.base_watts + change;
@@ -56,7 +50,7 @@ pub async fn run_appliance(
             current_watts = 0.0;
         }
 
-        // --- 3. Create State Payload ---
+        // --- create the changes application state ---
         let current_state = ApplianceState {
             id: config.id.clone(),
             name: config.name.clone(),
@@ -64,10 +58,9 @@ pub async fn run_appliance(
             is_on,
         };
 
-        // --- 4. Send Heartbeat to `main` Collector ---
+        // --- send heartbeat to `main` thread collector ---
         if let Err(e) = state_sender.send(current_state).await {
             println!("[ERROR] Failed to send state for {}: {}. Stopping task.", config.name, e);
-            // If the channel is broken, we can stop the task.
             break;
         }
 

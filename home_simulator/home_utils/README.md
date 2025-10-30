@@ -56,4 +56,4 @@ This program uses a "Collector" pattern to efficiently manage multiple concurren
 |                    |                                                    |
 |                    v (HTTP POST to [http://127.0.0.1:3000/state])       |
 |                                                                         |
-+--------------------AETHER AGENT ----------------------------------------+
++--------------------AETHER SERVER ---------------------------------------+

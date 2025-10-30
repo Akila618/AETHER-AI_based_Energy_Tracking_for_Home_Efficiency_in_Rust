@@ -4,12 +4,15 @@ use reqwest::Client;
 use std::collections::HashMap;
 use tokio::sync::mpsc;
 use tokio::time::{Duration, interval};
+use tokio::time::sleep;
+
+//cient for sending HTTP requests to aether agent
+
+
 
 #[tokio::main]
 async fn main() {
     println!("Starting AETHER House Simulator...");
-
-    let agent_url = "http://127.0.0.1:3000/state";
 
     // --- Define our list of appliances ---
     let appliances_to_simulate = vec![
@@ -46,7 +49,8 @@ async fn main() {
     ];
 
     // n producers (appliances) will send data to 1 consumer (main loop).
-    let (tx, rx) = mpsc::channel(100); // Channel with a buffer of 100
+    let (tx, rx) = mpsc::channel(150);
+
 
     // --- Spawn an async task for each appliance ---
     for app_config in appliances_to_simulate {
@@ -56,60 +60,48 @@ async fn main() {
         });
     }
 
-    // --- Start the Collector & Dispatcher Loop ---
+    // --- Start the state collection loop ---
     println!("[Simulator] All appliance tasks spawned. Starting collector loop...");
-    run_collector_dispatcher(rx, agent_url.to_string()).await;
+    run_state_collector(rx).await;
+    
 }
 
-async fn run_collector_dispatcher(
-    mut state_receiver: mpsc::Receiver<ApplianceState>,
-    agent_url: String,
-) {
+async fn run_state_collector(mut state_receiver: mpsc::Receiver<ApplianceState>) {
+    let client = connect_to_server().await;
+
+    while let Some(state) = state_receiver.recv().await {
+        //println!("[Collector] Received update: {:?}:{:?}",state.name, state.watts);
+        // Send the current household state to the AETHER agent
+        let household_state = HouseholdState {
+            timestamp: Utc::now(),
+            appliances: vec![state],
+        };
+        send_household_state(client.clone(), household_state).await;
+        
+    }
+}
+
+//connect to server and send callback
+async fn connect_to_server() -> Client {
     let client = Client::new();
-
-    // This HashMap stores the *most recent* state of every appliance
-    let mut household_state_map: HashMap<String, ApplianceState> = HashMap::new();
-
-    // Send a bundled report to the agent every 5 seconds
-    let mut dispatch_timer = interval(Duration::from_secs(5));
     loop {
-        tokio::select! {
-            Some(app_state) = state_receiver.recv() => {
-
-                household_state_map.insert(app_state.id.clone(), app_state);
-                println!("[Collector] Received state update. Total appliances tracked: {}", household_state_map.len());
-                println!("[Latest State] {:#?}", &household_state_map);
-            }
-
-            _ = dispatch_timer.tick() => {
-                if household_state_map.is_empty() {
-                    println!("[Dispatcher] No state received yet. Skipping dispatch.");
-                    continue;
-                }
-
-                println!("[Dispatcher] 5s timer ticked. Sending bundled state to agent...");
-
-                // Bundle all states from the map into a Vec
-                let appliances: Vec<ApplianceState> =
-                    household_state_map.values().cloned().collect();
-
-                let bundled_state = HouseholdState {
-                    timestamp: Utc::now(),
-                    appliances,
-                };
-
-                // --- Send the single, bundled report ---
-                match client.post(&agent_url).json(&bundled_state).send().await {
-                    Ok(res) => {
-                        if !res.status().is_success() {
-                            println!("[Dispatcher] Agent returned an error: {}", res.status());
-                        }
-                    },
-                    Err(e) => {
-                        println!("[Dispatcher] Failed to send state to agent: {}", e);
-                    }
-                }
-            }
+        if client.get("http://127.0.0.1:3000/state").send().await.is_ok() {
+            println!("[Simulator] Connected to AETHER Agent server.");
+            return client;
+            
+        } else {
+            println!("[Simulator] Failed to connect to AETHER Agent server. Retrying in 2 seconds...");
+            sleep(Duration::from_secs(2)).await;
         }
+    }
+}
+
+//send household state to server
+async fn send_household_state(client: Client, state: HouseholdState) {
+    let res = client.post("http://127.0.0.1:3000/state").json(&state).send().await; 
+    if res.is_ok() {
+        println!("[Simulator] Sent household state to AETHER Agent.");
+    } else {
+        println!("[Simulator] Failed to send household state to AETHER Agent.");
     }
 }
