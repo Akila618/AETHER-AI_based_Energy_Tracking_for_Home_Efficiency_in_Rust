@@ -10,29 +10,46 @@ use std::time::Duration;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
+use std::env; // To get the connection string
+
+// Import sqlx
+use sqlx::mysql::{MySqlPool, MySqlRow};
+use sqlx::{Pool, MySql, Row};
+
+const DB_URL: &str = "mysql://root:20000618MysqlousL@127.0.0.1:3306/aether";
+
 
 #[tokio::main]
 async fn main() {
     println!("[Agent Server] Starting AETHER Agent...");
+    
 
-    // 1. Create our API router
+    // Create our API router
     // This defines all the "routes" our server knows
     let app = Router::new().route("/state", post(handle_state));
 
-    // 2. Define the address to listen on
+    let pool = connect_to_db().await;
+    println!("[DATABASE] Connected to database.");
+
+    // Define the address to listen on
     let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
     println!("[Agent Server] Listening on http://127.0.0.1:3000");
 
-    // 3. Run the server
+    // Run the server
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn handle_state(
-    Json(payload): Json<HouseholdState>
-) {
-    // For now, just print what we received to prove it works.
-    // The {:#?} format is "pretty-print"
+async fn handle_state(Json(payload): Json<HouseholdState>) {
+
     println!("[Agent Server] Received new household state at {}:", payload.timestamp);
-    println!("{:#?}", payload.appliances);
-    
+    println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>{:#?}", payload);
+    // Insert each appliance's state into the database
+}
+
+
+
+//connect to  mysql database
+async fn connect_to_db()-> Pool<MySql> {
+    let pool = MySqlPool::connect(DB_URL).await.unwrap();
+    pool
 }

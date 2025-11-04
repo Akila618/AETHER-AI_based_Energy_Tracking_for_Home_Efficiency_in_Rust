@@ -10,3 +10,6 @@ serde_json = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 aether_utils = { path = "aether_utils" }
 axum = "0.8.6"
+sqlx = { version = "0.7", features = ["mysql", "runtime-tokio-rustls", "chrono"] }
+
+
