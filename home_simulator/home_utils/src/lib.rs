@@ -6,6 +6,8 @@ use rand::{Rng, SeedableRng};
 use rand::rngs::SmallRng;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+pub const STATE_PASS_INTERVAL_SECS: i64 = 5;
+
 #[derive(Debug, Serialize, Clone)]
 pub struct ApplianceState {
     pub id: String,
@@ -26,6 +28,7 @@ pub struct ApplianceConfig {
     pub name: String,
     pub base_watts: f64,
     pub heartbeat_interval: u64,
+    pub is_on: bool,
 }
 
 pub async fn run_appliance( config: ApplianceConfig, state_sender: Sender<ApplianceState>) {
@@ -35,7 +38,7 @@ pub async fn run_appliance( config: ApplianceConfig, state_sender: Sender<Applia
     let mut rng = SmallRng::seed_from_u64(seed);
 
     // Internal state for this appliance
-    let is_on = true;
+    let is_on = config.is_on;
     let mut current_watts = 0.0;
 
     println!("[Simulator] {} simulation is starting...", config.name);

@@ -1,55 +1,126 @@
-use aether_utils::{ApplianceConfig, ApplianceState, HouseholdState};
+use tokio::sync::mpsc;
+
+use aether_utils::{ApplianceState, HouseholdState, AgentMsg};
 use axum::{
-    routing::{get, post},
+    routing::{post},
     Router,
     Json,
 };
+use axum::extract::State;
 use tokio::net::TcpListener;
-//use serde::Desrialize;
-use std::time::Duration;
 use chrono::{DateTime, Utc};
-use serde::Deserialize;
 
-use std::env; // To get the connection string
+mod rules;
 
-// Import sqlx
-use sqlx::mysql::{MySqlPool, MySqlRow};
+use sqlx::mysql::{MySqlPool};
 use sqlx::{Pool, MySql, Row};
 
 const DB_URL: &str = "mysql://root:20000618MysqlousL@127.0.0.1:3306/aether";
-
-
-#[tokio::main]
-async fn main() {
-    println!("[Agent Server] Starting AETHER Agent...");
-    
-
-    // Create our API router
-    // This defines all the "routes" our server knows
-    let app = Router::new().route("/state", post(handle_state));
-
-    let pool = connect_to_db().await;
-    println!("[DATABASE] Connected to database.");
-
-    // Define the address to listen on
-    let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
-    println!("[Agent Server] Listening on http://127.0.0.1:3000");
-
-    // Run the server
-    axum::serve(listener, app).await.unwrap();
+#[derive(Clone)]
+struct AppState {
+    pool: Pool<MySql>,
+    tx: mpsc::Sender<AgentMsg>,
 }
 
-async fn handle_state(Json(payload): Json<HouseholdState>) {
+// =============================wrapper for handle_state to get latest sim_timestamp from db=============================
+async fn wrapper_handle_state(State(state): State<AppState>, Json(payload): Json<HouseholdState>) {
+    //get the latest sim_timestamp field from the database. if is empty, use current time
+    let latest_db_sim_timestamp: DateTime<Utc> = match sqlx::query("SELECT sim_timestamp FROM home_state ORDER BY sim_timestamp DESC LIMIT 1")
+        .fetch_one(&state.pool)
+        .await
+    {
+        Ok(row) => row.get::<DateTime<Utc>, _>("sim_timestamp"),
+        Err(_) => Utc::now(),
+    }; 
+
+    // call handler with owned pool and sender
+    handle_state(state.pool.clone(), state.tx.clone(), payload, latest_db_sim_timestamp).await;
+}
+
+
+// ============================handle_state function=====================================================================
+async fn handle_state(pool: Pool<MySql>, tx: mpsc::Sender<AgentMsg>, payload: HouseholdState, sim_timestamp: DateTime<Utc>) {
 
     println!("[Agent Server] Received new household state at {}:", payload.timestamp);
-    println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>{:#?}", payload);
-    // Insert each appliance's state into the database
+    println!("====[HOUSEHOLD STATUS UPDATE ===]\n{:#?}", payload); 
+
+    // insert each appliance's state into the database
+    let mut sim_timestamp_to_insert = sim_timestamp;
+    for appliance_state in payload.appliances.iter() {
+        println!("[Agent Server] Inserting appliance {} with sim_timestamp {}", appliance_state.id, sim_timestamp_to_insert);
+        insert_appliance_state(&pool, appliance_state, payload.timestamp, sim_timestamp_to_insert).await;
+
+         // pass the appliance state to agent rules for evaluation in the main loop
+        let state_for_agent = AgentMsg{
+            state: appliance_state.clone(),
+            real_time: payload.timestamp,
+            sim_time: sim_timestamp_to_insert,
+        };
+
+        // send to agent lookup task (async mpsc Sender)
+        if let Err(e) = tx.clone().send(state_for_agent).await {
+            println!("[HANDLE STATE]: Failed to pass data to agent: {}", e);
+        }
+
+        // increment sim_timestamp by 30 minutes for the next appliance
+        sim_timestamp_to_insert = sim_timestamp_to_insert + chrono::Duration::minutes(30);
+
+       
+        
+    }
 }
 
+// =====================================insert_appliance_state function===================================================
+async fn insert_appliance_state(pool: &Pool<MySql>, state: &ApplianceState, timestamp: DateTime<Utc>, sim_timestamp: DateTime<Utc>) {
+    let query = "INSERT INTO home_state (id, name, watts, is_on, timestamp, sim_timestamp) VALUES (?, ?, ?, ?, ?, ?)";
+    match sqlx::query(query)
+        .bind(&state.id)
+        .bind(&state.name)
+        .bind(state.watts)
+        .bind(state.is_on)
+        .bind(timestamp)
+        .bind(sim_timestamp)
+        .execute(pool)
+        .await
+    {
+        Ok(_) => println!("[DATABASE] Inserted state for appliance ID: {}", state.id),
+        Err(e) => println!("[DATABASE] Failed to insert state for appliance ID: {}: {}", state.id, e),
+    }
+}
 
-
-//connect to  mysql database
+// =====================================connect to  mysql database =======================================================
 async fn connect_to_db()-> Pool<MySql> {
     let pool = MySqlPool::connect(DB_URL).await.unwrap();
     pool
+}
+
+// ============================= async (tokio) main function ============================================================
+#[tokio::main]
+async fn main() {
+    println!("[Agent Server] Starting AETHER Agent...");
+
+    println!("[AGENT] Calling agent lookup.");
+    // create an async channel for agent messages
+    let (tx, rx) = mpsc::channel::<AgentMsg>(100);
+    println!("Communication channel established!");
+
+    // spawn the agent lookup task and move the receiver into it
+    tokio::spawn(async move {
+        rules::initialize_agent_lookup(rx).await;
+    });
+
+    // defines all the "routes" using axum
+    let pool = connect_to_db().await;
+    println!("[DATABASE] Connected to database.");
+    
+    let app_state = AppState { pool: pool.clone(), tx: tx.clone() };
+    let app = Router::new().route("/state", post(wrapper_handle_state)).with_state(app_state);
+    println!("[Agent Server] API routes configured.");
+
+    let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    println!("[Agent Server] Listening on http://127.0.0.1:3000");
+
+    // run the server
+    axum::serve(listener, app).await.unwrap();
+    
 }
