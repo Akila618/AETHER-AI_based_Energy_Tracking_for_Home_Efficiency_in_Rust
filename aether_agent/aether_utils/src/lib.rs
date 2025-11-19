@@ -1,3 +1,5 @@
+use std::clone;
+
 use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
 
@@ -31,7 +33,7 @@ pub struct HouseholdState {
     pub appliances: Vec<ApplianceState>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AgentMsg {
     pub state: ApplianceState,
     pub real_time: DateTime<Utc>,

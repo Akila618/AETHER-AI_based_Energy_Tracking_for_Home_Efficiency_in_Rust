@@ -1,6 +1,6 @@
 use serde::Serialize;
 use chrono::{DateTime, Utc};
-use tokio::sync::mpsc::Sender; // Import the channel Sender
+use tokio::sync::mpsc::Sender;
 use tokio::time::{sleep, Duration};
 use rand::{Rng, SeedableRng};
 use rand::rngs::SmallRng;
@@ -38,14 +38,17 @@ pub async fn run_appliance( config: ApplianceConfig, state_sender: Sender<Applia
     let mut rng = SmallRng::seed_from_u64(seed);
 
     // Internal state for this appliance
-    let is_on = config.is_on;
     let mut current_watts = 0.0;
 
     println!("[Simulator] {} simulation is starting...", config.name);
 
     loop {
-        // ---  simulate Wattage change ---
-        if is_on {
+
+        // change the is on (true/false) state randomly
+        let is_on_rand: bool = if rng.random_range(0..15) > 7 { true } else { false };
+
+        // --- simulate Wattage change based on the generated on/off state ---
+        if is_on_rand {
             let change_percent = rng.random_range(-0.05..0.05);
             let change = config.base_watts * change_percent;
             current_watts = config.base_watts + change;
@@ -58,7 +61,7 @@ pub async fn run_appliance( config: ApplianceConfig, state_sender: Sender<Applia
             id: config.id.clone(),
             name: config.name.clone(),
             watts: current_watts,
-            is_on,
+            is_on: is_on_rand,
         };
 
         // --- send heartbeat to `main` thread collector ---

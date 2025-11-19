@@ -18,7 +18,7 @@ async fn main() {
             name: "Living Room AC".to_string(),
             base_watts: 1500.0,
             heartbeat_interval: 2000,
-            is_on: true,
+            is_on: false,
         },
         ApplianceConfig {
             id: "light_kitchen".to_string(),
@@ -32,14 +32,14 @@ async fn main() {
             name: "Living Room TV".to_string(),
             base_watts: 200.0,
             heartbeat_interval: 1500,
-            is_on: true,
+            is_on: false,
         },
         ApplianceConfig {
             id: "fridge".to_string(),
             name: "Refrigerator".to_string(),
             base_watts: 200.0,
             heartbeat_interval: 3000,
-            is_on: true,
+            is_on: false,
         },
         ApplianceConfig {
             id: "microwave".to_string(),
@@ -74,15 +74,29 @@ async fn main() {
             name: "Bedroom Light".to_string(),
             base_watts: 75.0,
             heartbeat_interval: 1000,
-            is_on: true,
+            is_on: false,
         },
         ApplianceConfig {
             id: "computer".to_string(),
             name: "Desktop Computer".to_string(),
             base_watts: 250.0,
             heartbeat_interval: 1500,
-            is_on: true,
+            is_on: false,
         },
+        ApplianceConfig{
+            id: "router".to_string(),
+            name: "WiFi Router".to_string(),
+            base_watts: 15.0,
+            heartbeat_interval: 800,
+            is_on: false,
+        },
+        ApplianceConfig{
+            id: "ceiling_fan".to_string(),
+            name: "Ceiling Fan".to_string(),
+            base_watts: 75.0,
+            heartbeat_interval: 1200,
+            is_on: false,
+        }
     ];
 
     // appliances will send data to 1 consumer (main loop)
@@ -121,9 +135,8 @@ async fn run_collection_sender(
     loop {
         tokio::select! {
             Some(app_state) = state_receiver.recv() => {
-                // update the latest state for this appliance
                 household_state_map.insert(app_state.id.clone(), app_state);
-                println!("[Collector] Received state update. Appliances tracked: {}", household_state_map.len());
+                //println!("[Collector] Received state update. Appliances tracked: {}", household_state_map.len());
             }
 
             _ = dispatch_timer.tick() => {
@@ -133,8 +146,6 @@ async fn run_collection_sender(
                 }
 
                 println!("[Sender] 5s passed. Sending home state to agent...");
-
-                // Bundle all states from the map into a Vec
                 let appliances: Vec<ApplianceState> = household_state_map.values().cloned().collect();
 
                 let bundled_state = HouseholdState {
@@ -148,7 +159,7 @@ async fn run_collection_sender(
                         if !res.status().is_success() {
                             println!("[Sender] Agent returned an error: {}", res.status());
                         } else {
-                            println!("[Sender] Successfully sent house state ({} appliances)", bundled_state.appliances.len());
+                            println!("[Sender] Successfully sent house states to agent)");
                         }
                     },
                     Err(e) => {

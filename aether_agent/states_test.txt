@@ -1,0 +1,1807 @@
+[Agent Server] Starting AETHER Agent...
+[AGENT] Calling agent lookup.
+[AGENT]: Communication channel established!
+[AGENT]: Lookup started.......
+[DATABASE]: Connected to database.
+[Agent Server]: API routes configured.
+[Agent Server]: Listening on http://127.0.0.1:3000
+[MODEL TRAINING]: Training energy consumption prediction model...
+[DEBUG] N_SAMPLES: 61
+[DEBUG] First 5 Features (DateNum): [20469.0, 20468.0, 20467.0, 20466.0, 20465.0]
+[DEBUG] First 5 Targets (Watts): [273.12, 2427.8, 2129.29, 2476.52, 2374.95]
+[MODEL DEBUG] First 5 train predictions: [-765.7462559492342, -392.582577472238, -19.41889899524176, 353.74477948175445, 726.9084579587507]
+[MODEL DEBUG] First 5 train targets: [273.12, 2427.8, 2129.29, 2476.52, 2374.95]
+[MODEL TRAINING]: Training successful. Model ready. mean=20439, std=17.60681686165901, avg_target=10429.164098360656
+[PREDICT] Year: 2026, Month: 3, NumDays: 31
+[PREDICT] Date Range: 2026-03-01 to 2026-03-31
+[PREDICT] Day 2026-3-1 -> raw=-17184.948109W clipped=0.00W
+[PREDICT] Day 2026-3-2 -> raw=-17558.111787W clipped=0.00W
+[PREDICT] Day 2026-3-3 -> raw=-17931.275466W clipped=0.00W
+[PREDICT] Day 2026-3-4 -> raw=-18304.439144W clipped=0.00W
+[PREDICT] Day 2026-3-5 -> raw=-18677.602823W clipped=0.00W
+[PREDICT] Day 2026-3-6 -> raw=-19050.766501W clipped=0.00W
+[PREDICT] Day 2026-3-7 -> raw=-19423.930180W clipped=0.00W
+[PREDICT] Day 2026-3-8 -> raw=-19797.093858W clipped=0.00W
+[PREDICT] Day 2026-3-9 -> raw=-20170.257537W clipped=0.00W
+[PREDICT] Day 2026-3-10 -> raw=-20543.421215W clipped=0.00W
+[PREDICT] Day 2026-3-11 -> raw=-20916.584894W clipped=0.00W
+[PREDICT] Day 2026-3-12 -> raw=-21289.748572W clipped=0.00W
+[PREDICT] Day 2026-3-13 -> raw=-21662.912251W clipped=0.00W
+[PREDICT] Day 2026-3-14 -> raw=-22036.075929W clipped=0.00W
+[PREDICT] Day 2026-3-15 -> raw=-22409.239608W clipped=0.00W
+[PREDICT] Day 2026-3-16 -> raw=-22782.403286W clipped=0.00W
+[PREDICT] Day 2026-3-17 -> raw=-23155.566965W clipped=0.00W
+[PREDICT] Day 2026-3-18 -> raw=-23528.730643W clipped=0.00W
+[PREDICT] Day 2026-3-19 -> raw=-23901.894322W clipped=0.00W
+[PREDICT] Day 2026-3-20 -> raw=-24275.058000W clipped=0.00W
+[PREDICT] Day 2026-3-21 -> raw=-24648.221678W clipped=0.00W
+[PREDICT] Day 2026-3-22 -> raw=-25021.385357W clipped=0.00W
+[PREDICT] Day 2026-3-23 -> raw=-25394.549035W clipped=0.00W
+[PREDICT] Day 2026-3-24 -> raw=-25767.712714W clipped=0.00W
+[PREDICT] Day 2026-3-25 -> raw=-26140.876392W clipped=0.00W
+[PREDICT] Day 2026-3-26 -> raw=-26514.040071W clipped=0.00W
+[PREDICT] Day 2026-3-27 -> raw=-26887.203749W clipped=0.00W
+[PREDICT] Day 2026-3-28 -> raw=-27260.367428W clipped=0.00W
+[PREDICT] Day 2026-3-29 -> raw=-27633.531106W clipped=0.00W
+[PREDICT] Day 2026-3-30 -> raw=-28006.694785W clipped=0.00W
+[PREDICT] Day 2026-3-31 -> raw=-28379.858463W clipped=0.00W
+[PREDICT] Model produced non-positive predictions; falling back to historical average target.
+Prediction: [PREDICTION] Estimated Usage for 2026-3: 5011.21 kWh. Estimated Cost: LKR 15033.64
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:34:38.957036300 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:34:38.957036300Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: false,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-16 14:48:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-16 15:18:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-16 14:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T14:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-16 15:48:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-16 15:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T15:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-16 16:18:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-16 15:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T15:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-16 16:48:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-16 16:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T16:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-16 17:18:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-16 16:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T16:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-16 17:48:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-16 17:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T17:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-16 18:18:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-16 17:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T17:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-16 18:48:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-16 18:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T18:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-16 19:18:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-16 18:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T18:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-16 19:48:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-16 19:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T19:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-16 20:18:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-16 19:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T19:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-16 20:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:38.957036300Z,
+    sim_time: 2026-01-16T20:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:34:43.958992400 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:34:43.958992400Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: true,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-16 20:18:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-16 20:48:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-16 20:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T20:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-16 21:18:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-16 20:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T20:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-16 21:48:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-16 21:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T21:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-16 22:18:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-16 21:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T21:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-16 22:48:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-16 22:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T22:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-16 23:18:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-16 22:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T22:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-16 23:48:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-16 23:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T23:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-17 00:18:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-16 23:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-16T23:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-17 00:48:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-17 00:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-17T00:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-17 01:18:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-17 00:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-17T00:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-17 01:48:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-17 01:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-17T01:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-17 01:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:43.958992400Z,
+    sim_time: 2026-01-17T01:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:34:48.958597400 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:34:48.958597400Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: true,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-17 01:48:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-17 02:18:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-17 01:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T01:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-17 02:48:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-17 02:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T02:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-17 03:18:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-17 02:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T02:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-17 03:48:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-17 03:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T03:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-17 04:18:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-17 03:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T03:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-17 04:48:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-17 04:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T04:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT ALERT]: Microwave has been used for more than 60 minutes continuously!
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-17 05:18:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-17 04:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T04:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-17 05:48:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-17 05:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T05:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-17 06:18:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-17 05:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T05:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-17 06:48:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-17 06:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T06:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-17 07:18:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-17 06:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T06:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-17 07:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:48.958597400Z,
+    sim_time: 2026-01-17T07:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:34:53.963692 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:34:53.963692Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: false,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-17 07:18:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-17 07:48:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-17 07:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T07:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-17 08:18:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-17 07:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T07:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-17 08:48:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-17 08:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T08:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-17 09:18:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-17 08:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T08:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-17 09:48:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-17 09:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T09:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-17 10:18:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-17 09:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T09:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT ALERT]: Microwave has been used for more than 60 minutes continuously!
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-17 10:48:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-17 10:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T10:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-17 11:18:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-17 10:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T10:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-17 11:48:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-17 11:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T11:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-17 12:18:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-17 11:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T11:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-17 12:48:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-17 12:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T12:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-17 12:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:53.963692Z,
+    sim_time: 2026-01-17T12:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:34:58.959847900 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:34:58.959847900Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: true,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-17 12:48:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-17 13:18:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-17 12:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T12:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-17 13:48:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-17 13:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T13:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-17 14:18:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-17 13:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T13:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-17 14:48:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-17 14:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T14:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-17 15:18:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-17 14:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T14:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-17 15:48:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-17 15:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T15:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-17 16:18:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-17 15:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T15:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-17 16:48:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-17 16:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T16:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-17 17:18:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-17 16:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T16:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-17 17:48:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-17 17:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T17:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-17 18:18:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-17 17:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T17:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT ALERT]: Bedroom light is on during daylight hours!
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-17 18:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:34:58.959847900Z,
+    sim_time: 2026-01-17T18:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:35:03.967730600 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:35:03.967730600Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: true,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-17 18:18:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-17 18:48:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-17 18:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T18:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-17 19:18:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-17 18:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T18:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-17 19:48:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-17 19:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T19:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-17 20:18:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-17 19:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T19:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-17 20:48:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-17 20:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T20:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-17 21:18:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-17 20:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T20:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-17 21:48:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-17 21:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T21:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-17 22:18:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-17 21:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T21:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-17 22:48:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-17 22:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T22:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-17 23:18:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-17 22:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T22:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-17 23:48:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-17 23:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T23:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-17 23:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:03.967730600Z,
+    sim_time: 2026-01-17T23:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[AGENT]: Running periodic lookup...
+[Agent Server] Received new household state at 2025-11-17 10:35:08.966777500 UTC:
+====[HOUSEHOLD STATUS UPDATE ===]
+HouseholdState {
+    timestamp: 2025-11-17T10:35:08.966777500Z,
+    appliances: [
+        ApplianceState {
+            id: "computer",
+            name: "Desktop Computer",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "ac_living",
+            name: "Living Room AC",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "tv_living",
+            name: "Living Room TV",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "fridge",
+            name: "Refrigerator",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_kitchen",
+            name: "Kitchen Light",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "microwave",
+            name: "Microwave",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "washer",
+            name: "Washing Machine",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "router",
+            name: "WiFi Router",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "ceiling_fan",
+            name: "Ceiling Fan",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "oven",
+            name: "Oven",
+            watts: 0.0,
+            is_on: true,
+        },
+        ApplianceState {
+            id: "light_bedroom",
+            name: "Bedroom Light",
+            watts: 0.0,
+            is_on: false,
+        },
+        ApplianceState {
+            id: "dryer",
+            name: "Clothes Dryer",
+            watts: 0.0,
+            is_on: false,
+        },
+    ],
+}
+[Agent Server] Inserting appliance computer with sim_timestamp 2026-01-17 23:48:53 UTC
+[DATABASE] Inserted state for appliance ID: computer
+[Agent Server] Inserting appliance ac_living with sim_timestamp 2026-01-18 00:18:53 UTC
+[AGENT] Received appliance state for ID: computer at sim_time: 2026-01-17 23:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "computer",
+        name: "Desktop Computer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-17T23:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ac_living
+[Agent Server] Inserting appliance tv_living with sim_timestamp 2026-01-18 00:48:53 UTC
+[AGENT] Received appliance state for ID: ac_living at sim_time: 2026-01-18 00:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ac_living",
+        name: "Living Room AC",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T00:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: tv_living
+[Agent Server] Inserting appliance fridge with sim_timestamp 2026-01-18 01:18:53 UTC
+[AGENT] Received appliance state for ID: tv_living at sim_time: 2026-01-18 00:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "tv_living",
+        name: "Living Room TV",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T00:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: fridge
+[Agent Server] Inserting appliance light_kitchen with sim_timestamp 2026-01-18 01:48:53 UTC
+[AGENT] Received appliance state for ID: fridge at sim_time: 2026-01-18 01:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "fridge",
+        name: "Refrigerator",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T01:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_kitchen
+[Agent Server] Inserting appliance microwave with sim_timestamp 2026-01-18 02:18:53 UTC
+[AGENT] Received appliance state for ID: light_kitchen at sim_time: 2026-01-18 01:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_kitchen",
+        name: "Kitchen Light",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T01:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: microwave
+[Agent Server] Inserting appliance washer with sim_timestamp 2026-01-18 02:48:53 UTC
+[AGENT] Received appliance state for ID: microwave at sim_time: 2026-01-18 02:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "microwave",
+        name: "Microwave",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T02:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: washer
+[Agent Server] Inserting appliance router with sim_timestamp 2026-01-18 03:18:53 UTC
+[AGENT] Received appliance state for ID: washer at sim_time: 2026-01-18 02:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "washer",
+        name: "Washing Machine",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T02:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: router
+[Agent Server] Inserting appliance ceiling_fan with sim_timestamp 2026-01-18 03:48:53 UTC
+[AGENT] Received appliance state for ID: router at sim_time: 2026-01-18 03:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "router",
+        name: "WiFi Router",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T03:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: ceiling_fan
+[Agent Server] Inserting appliance oven with sim_timestamp 2026-01-18 04:18:53 UTC
+[AGENT] Received appliance state for ID: ceiling_fan at sim_time: 2026-01-18 03:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "ceiling_fan",
+        name: "Ceiling Fan",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T03:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: oven
+[Agent Server] Inserting appliance light_bedroom with sim_timestamp 2026-01-18 04:48:53 UTC
+[AGENT] Received appliance state for ID: oven at sim_time: 2026-01-18 04:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "oven",
+        name: "Oven",
+        watts: 0.0,
+        is_on: true,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T04:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: light_bedroom
+[Agent Server] Inserting appliance dryer with sim_timestamp 2026-01-18 05:18:53 UTC
+[AGENT] Received appliance state for ID: light_bedroom at sim_time: 2026-01-18 04:48:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "light_bedroom",
+        name: "Bedroom Light",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T04:48:53Z,
+}
+[RULES]: Rule engine update recieved.
+[DATABASE] Inserted state for appliance ID: dryer
+[AGENT] Received appliance state for ID: dryer at sim_time: 2026-01-18 05:18:53 UTC
+Update recieved: AgentMsg {
+    state: ApplianceState {
+        id: "dryer",
+        name: "Clothes Dryer",
+        watts: 0.0,
+        is_on: false,
+    },
+    real_time: 2025-11-17T10:35:08.966777500Z,
+    sim_time: 2026-01-18T05:18:53Z,
+}
+[RULES]: Rule engine update recieved.
+[AGENT]: Running periodic lookup...

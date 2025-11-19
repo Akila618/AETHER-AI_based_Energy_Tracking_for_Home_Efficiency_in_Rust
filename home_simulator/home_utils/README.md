@@ -1,4 +1,4 @@
-# AETHER: AI-based Energy Tracking for Home Efficiency (in) Rust
+# AETHER: AI-based Energy Tracking for Home Efficiency (in) Rust/React
 
 AETHER is a high-performance smart energy monitoring system built entirely in Rust. This project uses a client-server architecture to simulate a household's energy consumption and provide intelligent, rule-based recommendations for improving efficiency.
 
