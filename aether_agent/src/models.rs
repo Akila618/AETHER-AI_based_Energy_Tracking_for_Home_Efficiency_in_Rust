@@ -21,6 +21,7 @@ use linfa::{
     DatasetBase,
     Error,
 };
+use serde_json::json;
 
 const LKR_PER_KWH: f64 = 3.0; 
 const SNAPSHOTS_PER_DAY: f64 = 48.0; 
@@ -198,4 +199,57 @@ pub async fn run_prediction_for_month(pool: &MySqlPool, year: i32, month: u32) -
         total_monthly_kwh,
         total_monthly_cost
     ))
+
 }
+
+/// Return a structured prediction as JSON value with numeric fields.
+
+
+/// Return a structured prediction as JSON value with numeric fields.
+pub async fn run_prediction_for_month_json(pool: &MySqlPool, year: i32, month: u32) -> Result<serde_json::Value> {
+    let train = train_model(pool).await?;
+    let model = train.model;
+    let mean = train.mean;
+    let std = train.std;
+
+    let num_days = days_in_month(year, month);
+    let epoch = NaiveDate::from_ymd_opt(1970, 1, 1).unwrap();
+
+    let mut prediction_features: Vec<f64> = Vec::new();
+    for day in 1..=num_days {
+        let date = NaiveDate::from_ymd_opt(year, month, day).ok_or("Invalid date")?;
+        let date_num = date.signed_duration_since(epoch).num_days() as f64;
+        prediction_features.push((date_num - mean) / std);
+    }
+
+    let prediction_array = Array2::from_shape_vec((num_days as usize, 1), prediction_features).unwrap();
+    let predictions = model.predict(&prediction_array);
+
+    let mut total_predicted_watts = 0.0;
+    let mut daily_watts: Vec<f64> = Vec::new();
+    for i in 0..num_days as usize {
+        let raw_daily = predictions[i];
+        let daily_w = raw_daily.max(0.0);
+        daily_watts.push(daily_w);
+        total_predicted_watts += daily_w;
+    }
+
+    if total_predicted_watts < 1.0 {
+        let fallback_daily = train.avg_target;
+        total_predicted_watts = fallback_daily * (num_days as f64);
+        daily_watts = vec![fallback_daily; num_days as usize];
+    }
+
+    let total_simulated_hours = num_days as f64 * 24.0;
+    let total_monthly_kwh = (total_predicted_watts / SNAPSHOTS_PER_DAY) / 1000.0 * total_simulated_hours;
+    let total_monthly_cost = total_monthly_kwh * LKR_PER_KWH;
+
+    Ok(json!({
+        "year": year,
+        "month": month,
+        "monthly_kwh": total_monthly_kwh,
+        "monthly_cost": total_monthly_cost,
+        "daily_watts": daily_watts
+    }))
+}
+    

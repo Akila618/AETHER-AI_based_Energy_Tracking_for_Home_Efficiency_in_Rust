@@ -24,6 +24,10 @@ use sqlx::mysql::{MySqlPool};
 use sqlx::{Pool, MySql, Row};
 
 use crate::models::run_prediction_for_month;
+use crate::models::run_prediction_for_month_json;
+use std::collections::HashMap;
+use axum::extract::Query;
+use axum::http::StatusCode;
 
 const DB_URL: &str = "mysql://root:20000618MysqlousL@127.0.0.1:3306/aether";
 #[derive(Clone)]
@@ -125,7 +129,7 @@ async fn ws_handler(State(state): State<AppState>, ws: WebSocketUpgrade) -> impl
     ws.on_upgrade(move |socket| handle_ws(socket, state.bcast.subscribe()))
 }
 
-async fn handle_ws(mut socket: WebSocket, mut rx: broadcast::Receiver<String>) {
+async fn handle_ws(socket: WebSocket, mut rx: broadcast::Receiver<String>) {
     let (mut sender, mut _receiver) = socket.split();
 
     loop {
@@ -168,8 +172,11 @@ async fn main() {
     println!("[DATABASE]: Connected to database.");
     
     let app_state = AppState { pool: pool.clone(), tx: tx.clone() , bcast: bcast_tx.clone()};
-    let app = Router::new().route("/state", post(wrapper_handle_state))
+
+    let app = Router::new()
+        .route("/state", post(wrapper_handle_state))
         .route("/ws", get(ws_handler))
+        .route("/api/predictions", get(predictions_handler))
         .with_state(app_state);
     println!("[Agent Server]: API routes configured.");
 
@@ -186,4 +193,19 @@ async fn main() {
     // run the server
     axum::serve(listener, app).await.unwrap();
     
+}
+
+async fn predictions_handler(State(state): State<AppState>, Query(params): Query<HashMap<String, String>>) -> impl IntoResponse {
+    // parse year and month from query params
+    let year = params.get("year").and_then(|s| s.parse::<i32>().ok()).unwrap_or_else(|| 0);
+    let month = params.get("month").and_then(|s| s.parse::<u32>().ok()).unwrap_or_else(|| 0);
+
+    if year <= 0 || month == 0 || month > 12 {
+        return (StatusCode::BAD_REQUEST, Json(json!({"error":"invalid year/month"}))).into_response();
+    }
+
+    match run_prediction_for_month_json(&state.pool, year, month).await {
+        Ok(val) => ([("Access-Control-Allow-Origin","*")], (StatusCode::OK, Json(val))).into_response(),
+        Err(e) => ([("Access-Control-Allow-Origin","*")], (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": format!("Prediction failed: {}", e)})))).into_response(),
+    }
 }

@@ -10,6 +10,7 @@ function App() {
   const [error, setError] = useState('')
   const [messages, setMessages] = useState([])
   const [msg, setMsg] = useState('')
+  const [prediction, setPrediction] = useState(null)
   const [liveUpdates, setLiveUpdates] = useState([])
   const [alerts, setAlerts] = useState([])
   const [recs, setRecs] = useState([])
@@ -68,7 +69,7 @@ function App() {
 
     return () => ws.close();
   }, []);
-
+ 
   if (!loggedIn) {
     return (
       <div className="login-container">
@@ -143,7 +144,6 @@ function App() {
               {liveUpdates.length === 0 ? (
                 <div className="update-line muted">[sim] No updates yet. Sim Time: --:--:--</div>
               ) : (() => {
-                // Show all received appliance state messages (most recent first)
                 const all = liveUpdates;
                 return (
                   <div>
@@ -187,7 +187,7 @@ function App() {
           <div className="panel wattage-monitor">
             <div className="panel-header"><h3>Wattage Monitor</h3></div>
             <div>
-              <div style={{marginBottom:6}}>Total current watts:</div>
+              <div style={{marginBottom:6, color:"#000000ff", fontSize:"larger"}}>Current Watts:</div>
               <div className="watt-counter">{liveTotal !== null ? `${liveTotal.toFixed(2)} W` : '—'}</div>
               <p style={{marginTop:8}}>Average daily: <strong>2.1 kWh</strong></p>
             </div>
@@ -209,35 +209,49 @@ function App() {
 
         <section className="panel chat">
           <h3>Estimated Wattage & Cost</h3>
-          <div style={{marginBottom:8}}>
-            <label style={{marginRight:8}}>Year:
-              <input type="number" id="pred-year" defaultValue={2026} style={{marginLeft:6, width:90}} />
-            </label>
-            <label>Month:
-              <input type="number" id="pred-month" defaultValue={2} min={1} max={12} style={{marginLeft:6, width:60}} />
-            </label>
-            <button className="btn" style={{marginLeft:8}} onClick={async ()=>{
-              const y = document.getElementById('pred-year').value
-              const m = document.getElementById('pred-month').value
-              try {
-                // call backend prediction API
-                const res = await fetch(`/api/predictions?year=${y}&month=${m}`)
-                if (!res.ok) throw new Error(await res.text())
-                const data = await res.json()
-                // expected { monthly_kwh, monthly_cost, daily }
-                setMessages([{from:'System', text:`Estimated ${y}-${m}: ${data.monthly_kwh} kWh, Cost LKR ${data.monthly_cost}`}])
-              } catch (e) {
-                setMessages([{from:'System', text:`Prediction failed: ${e.message}`}])
-              }
-            }}>Estimate</button>
-          </div>
-          <div className="chat-messages" id="chat-messages">
-            {messages.length===0 ? <div><em>No estimates yet</em></div> : messages.map((m, i) => (
-              <div key={i}><strong>{m.from}</strong>: {m.text}</div>
-            ))}
-          </div>
+            <div className="prediction-panel">
+              <div className="prediction-form">
+                <label><span style={{paddingRight:"5px"}}>Year:</span>
+                  <input type="number" id="pred-year" style={{color:"#676767ff"}} defaultValue={2026} min={2000} max={2100} />
+                </label>
+                <label><span style={{paddingRight:"5px"}}>Month:</span>
+                  <input type="number" id="pred-month" style={{color:"#676767ff"}} defaultValue={2} min={1} max={12} />
+                </label>
+                  <button className="btn" onClick={async ()=>{
+                    const y = document.getElementById('pred-year').value
+                    const m = document.getElementById('pred-month').value
+                    setPrediction(null)
+                    try {
+                      const res = await fetch(`http://127.0.0.1:3000/api/predictions?year=${y}&month=${m}`)
+                      if (!res.ok) throw new Error(await res.text())
+                      const data = await res.json()
+                      setPrediction({ year: data.year, month: data.month, monthly_kwh: Number(data.monthly_kwh), monthly_cost: Number(data.monthly_cost), daily: data.daily_watts })
+                      setMessages([{from:'System', text: `Estimated ${y}-${m}: ${Number(data.monthly_kwh).toFixed(2)} kWh, Cost LKR ${Number(data.monthly_cost).toFixed(2)}`}])
+                    } catch (e) {
+                      setMessages([{from:'System', text:`Prediction failed: ${e.message}`}])
+                    }
+                  }}>Estimate</button>
+              </div>
+
+              <div className="prediction-result" aria-live="polite">
+                <div className="prediction-meta small">Selected: {prediction ? `${prediction.year}-${prediction.month}` : '—'}</div>
+                <div className="prediction-line">
+                  <div className="prediction-label">Estimated Monthly Usage :</div>
+                  <div className="prediction-value">{prediction ? `${prediction.monthly_kwh.toFixed(2)} kWh` : '—'}</div>
+                </div>
+                <div className="prediction-line">
+                  <div className="prediction-label">Estimated Monthly Cost :</div>
+                  <div className="prediction-value">{prediction ? `LKR ${prediction.monthly_cost.toFixed(2)}` : '—'}</div>
+                </div>
+              </div>
+            </div>
         </section>
       </main>
+
+      <footer>
+        <p style={{fontSize:"small"}}>Designed and developed by Akila Wanninayake under the course EEX6340 (BSE)</p>
+      </footer>
+
     </div>
   )
 }

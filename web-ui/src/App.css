@@ -89,9 +89,14 @@
   position: relative;
   overflow: hidden;
 }
-.panel h3 { margin:0 0 0.5rem 0 }
+.panel h3 { margin:0 0 0.5rem 0; color: #000000; text-align: left; padding-bottom: 20px;}
 
-.panel-header { display:flex; justify-content:space-between; align-items:center }
+.panel-header { 
+  display:flex;
+  justify-content:space-between; 
+  align-items:center;
+  color: #000; 
+}
 .panel h3 { margin:0 }
 
 .live-updates { height: 240px; overflow:auto }
@@ -116,6 +121,7 @@
   text-overflow: clip;
   display: block;
   text-align: left;
+  color: #a2a2a2;
 }
 .live-updates .update-line.muted { color: rgba(219,234,254,0.6); font-style: italic }
 .wattage-monitor { height: 150px; margin-bottom: 1rem }
@@ -130,7 +136,7 @@
 .recommendations ul { padding-left:1.2rem }
 
 /* fixed-height containers to prevent layout growth when many items arrive */
-.alerts .alerts-list { max-height: 220px; overflow-y: auto; padding-right:6px }
+.alerts .alerts-list { max-height: 240px; overflow-y:auto; padding-right:6px }
 .recommendations .recommendation-list { max-height: 220px; overflow-y: auto; padding-right:6px }
 
 .update-line { color: #111 }
@@ -176,6 +182,29 @@ aside {
 @media (max-width: 800px) {
   .dashboard { grid-template-columns: 1fr }
   .chat { height: 300px }
+}
+
+/* Predictions panel styles */
+.prediction-panel { display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start }
+.prediction-form { display:flex; flex-direction: column; gap:0.5rem; }
+.prediction-form label { font-size:0.95rem; color:#334155; text-align: left; }
+.prediction-form input[type="number"] { width:100px; padding:0.5rem 0.4rem; border-radius:8px; border:1px solid #e2e8f0; background:#fff; box-shadow: inset 0 1px 0 rgba(0,0,0,0.02) }
+.prediction-form .btn { padding:0.6rem 0.9rem; border-radius:8px; font-weight:700 }
+
+.prediction-result { width:100%; display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start; border-radius:10px; background: linear-gradient(180deg,#fbfdff,#f4f8ff); border:1px solid #e6eefc; box-shadow: 0 6px 20px rgba(15,23,42,0.04); padding:5px }
+.prediction-number { font-size:1.6rem; font-weight:800; color:#0f172a }
+.prediction-sub { font-size:0.95rem; color:#475569 }
+.prediction-meta { text-align:left;color: #000000;}
+.prediction-meta .small { font-size:0.9rem; color:#000000; margin-bottom:6px }
+
+.prediction-line { display:flex; width:100%; padding:6px 0 }
+.prediction-line:first-of-type { border-top: none }
+.prediction-label { color:#334155; font-weight:900;  }
+.prediction-value { color:#0b1220; font-weight:600 }
+
+@media (max-width: 900px) {
+  .prediction-form { flex-direction:column; align-items:flex-start }
+  .prediction-result { flex-direction:column; align-items:flex-start }
 }
 
 
