@@ -82,7 +82,7 @@ async fn handle_state(pool: Pool<MySql>, tx: mpsc::Sender<AgentMsg>,bcast: broad
             "real_time": state_for_agent.real_time.to_rfc3339(),
             "sim_time": state_for_agent.sim_time.to_rfc3339()
         }).to_string();
-        
+
         if let Err(e) = bcast.send(bmsg) {
             println!("[BROADCAST] Failed to send realtime update: {}", e);
         }
@@ -153,13 +153,14 @@ async fn main() {
     println!("[AGENT] Calling agent lookup.");
     // create an async channel for agent messages
     let (tx, rx) = mpsc::channel::<AgentMsg>(100);
-    let (bcast_tx, bcast_rx) = broadcast::channel::<String>(256);
+    let (bcast_tx, _bcast_rx) = broadcast::channel::<String>(256);
 
     println!("[AGENT]: Communication channels established!");
 
-    // spawn the agent lookup task and move the receiver into it
+    // spawn the agent lookup task and move the receiver + broadcaster into it
+    let bcast_for_rules = bcast_tx.clone();
     tokio::spawn(async move {
-        rules::initialize_agent_lookup(rx).await;
+        rules::initialize_agent_lookup(rx, bcast_for_rules).await;
     });
 
     // defines all the "routes" using axum

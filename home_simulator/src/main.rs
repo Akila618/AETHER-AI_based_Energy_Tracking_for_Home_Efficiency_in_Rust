@@ -96,6 +96,13 @@ async fn main() {
             base_watts: 75.0,
             heartbeat_interval: 1200,
             is_on: false,
+        },
+        ApplianceConfig{
+            id: "ev_charger".to_string(),
+            name: "Battery charger".to_string(),
+            base_watts: 5000.00, 
+            heartbeat_interval: 1100,
+            is_on: false,
         }
     ];
 

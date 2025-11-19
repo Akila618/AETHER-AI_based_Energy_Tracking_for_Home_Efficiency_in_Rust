@@ -11,6 +11,9 @@ function App() {
   const [messages, setMessages] = useState([])
   const [msg, setMsg] = useState('')
   const [liveUpdates, setLiveUpdates] = useState([])
+  const [alerts, setAlerts] = useState([])
+  const [recs, setRecs] = useState([])
+  const [liveTotal, setLiveTotal] = useState(null)
   function handleSubmit(e) {
     e.preventDefault()
     setError('')
@@ -38,8 +41,27 @@ function App() {
     ws.onmessage = (evt) => {
       try {
         const obj = JSON.parse(evt.data);
-        // push new state message onto live updates array
-        setLiveUpdates(prev => [obj, ...prev].slice(0, 50));
+        // route message types
+        const t = obj.type || 'state';
+        if (t === 'state') {
+          // keep recent state messages (cap 50)
+          setLiveUpdates(prev => [obj, ...prev].slice(0, 50));
+        } else if (t === 'alert') {
+          // alerts (cap 30)
+          setAlerts(prev => [obj, ...prev].slice(0, 30));
+        } else if (t === 'recommendation') {
+          setRecs(prev => [obj, ...prev].slice(0, 30));
+        } else if (t === 'info') {
+          // treat as a recommendation/info
+          setRecs(prev => [obj, ...prev].slice(0, 30));
+        } else if (t === 'live_total') {
+          // update live total display
+          const total = typeof obj.total_watts === 'number' ? obj.total_watts : Number(obj.total_watts || 0);
+          setLiveTotal(total);
+        } else {
+          // unknown type: push to general messages for debug
+          setMessages(prev => [{from:'System', text: JSON.stringify(obj)} , ...prev].slice(0,20));
+        }
       } catch(e) { console.error('ws message parse', e); }
     };
     ws.onclose = () => console.log('ws closed');
@@ -115,7 +137,7 @@ function App() {
 
       <main className="dashboard">
         <section className="panel">
-          <h3>Live Home Updates</h3>
+          <div className="panel-header"><h3>Live Home Updates</h3></div>
           <div className="live-updates">
             <div className="console" role="log" aria-live="polite">
               {liveUpdates.length === 0 ? (
@@ -146,28 +168,42 @@ function App() {
             </div>
           </div>
         </section>
-
         <section className="panel alerts">
-          <h3>Alerts & Warnings</h3>
-          <div className="alert-item warn">Bulb left on during daylight hours</div>
-          <div className="alert-item error">High peak usage detected yesterday</div>
+          <div className="panel-header"><h3>Alerts & Warnings</h3></div>
+          <div className="alerts-list">
+            {alerts.length === 0 ? (
+              <div className="alert-item muted">No alerts</div>
+            ) : (
+              alerts.map((a, i) => {
+                const sev = (a.severity || a.level || 'info').toString();
+                const cls = sev === 'error' ? 'alert-item error' : (sev === 'warn' ? 'alert-item warn' : 'alert-item');
+                return <div key={i} className={cls}>{a.message}</div>
+              })
+            )}
+          </div>
         </section>
 
         <aside>
           <div className="panel wattage-monitor">
-            <h3>Wattage Monitor</h3>
+            <div className="panel-header"><h3>Wattage Monitor</h3></div>
             <div>
-              <p>Total current watts: <strong>1540 W</strong></p>
-              <p>Average daily: <strong>2.1 kWh</strong></p>
+              <div style={{marginBottom:6}}>Total current watts:</div>
+              <div className="watt-counter">{liveTotal !== null ? `${liveTotal.toFixed(2)} W` : '—'}</div>
+              <p style={{marginTop:8}}>Average daily: <strong>2.1 kWh</strong></p>
             </div>
           </div>
 
           <div className="panel recommendations">
-            <h3>Recommendations</h3>
-            <ul>
-              <li>Shift washing machine to off-peak hours.</li>
-              <li>Lower AC thermostat by 2°C during peak hours.</li>
-            </ul>
+            <div className="panel-header"><h3>Recommendations</h3></div>
+            <div className="recommendation-list">
+              {recs.length === 0 ? (
+                <div className="muted"><em>No recommendations</em></div>
+              ) : (
+                <div>
+                  {recs.map((r, i) => <div key={i} className="recommendation-item">{r.message}</div>)}
+                </div>
+              )}
+            </div>
           </div>
         </aside>
 

@@ -74,28 +74,35 @@
 
 .dashboard {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 360px;
   gap: 1rem;
+  align-items: start;
+  grid-auto-rows: minmax(40px, auto);
   margin-top: 1rem;
 }
 .panel {
-  background: #2c08b003;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
   padding: 1rem;
-  box-shadow: 0 1px 2px rgba(16,24,40,0.03);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.04);
+  position: relative;
+  overflow: hidden;
 }
 .panel h3 { margin:0 0 0.5rem 0 }
 
-.live-updates { height: 220px; overflow:auto }
+.panel-header { display:flex; justify-content:space-between; align-items:center }
+.panel h3 { margin:0 }
+
+.live-updates { height: 240px; overflow:auto }
 .live-updates .console {
-  /* single-line console: no scroll bar, compact */
-  height: auto;
-  overflow: hidden;
-  background: #0b1220;
-  color: #dbeafe;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  /* restored dark console for live home status */
+  height: 200px;
+  overflow-y: auto;
+  background: #0b1220; /* dark */
+  color: #dbeafe; /* light */
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Segoe UI Mono', 'Oxygen Mono', monospace;
   font-size: 0.95rem;
   line-height: 1.4;
@@ -114,10 +121,50 @@
 .wattage-monitor { height: 150px; margin-bottom: 1rem }
 
 .alerts { margin-bottom: 1rem }
-.alert-item { padding:0.5rem; border-radius:4px; margin-bottom:0.5rem }
-.alert-item.warn { background:#fff7e6; border:1px solid #ffd580 }
-.alert-item.error { background:#fff1f0; border:1px solid #ff8a80 }
+.alert-item { padding:0.6rem 0.75rem; border-radius:6px; margin-bottom:0.5rem; background: linear-gradient(180deg,#ffebeb,#ffdcdc); color:#111; border:1px solid #ff8a8a }
+.alert-item.warn { background: linear-gradient(180deg,#fffaf0,#fff4d6); border:1px solid #ffd580; color:#111 }
+.alert-item.error { background: linear-gradient(180deg,#ffecec,#ffc9c9); border:1px solid #ff6b6b; color:#111 }
+
+.recommendation-item { padding:0.6rem 0.75rem; border-radius:6px; margin-bottom:0.5rem; background: linear-gradient(180deg,#f3fff3,#e2ffd9); color:#063; border:1px solid #6bd36b }
+.recommendation-item strong { color: #063 }
 .recommendations ul { padding-left:1.2rem }
+
+/* fixed-height containers to prevent layout growth when many items arrive */
+.alerts .alerts-list { max-height: 220px; overflow-y: auto; padding-right:6px }
+.recommendations .recommendation-list { max-height: 220px; overflow-y: auto; padding-right:6px }
+
+.update-line { color: #111 }
+
+/* Watt counter styling */
+.wattage-monitor { height: 150px; margin-bottom: 1rem }
+.watt-counter {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg,#0f172a,#2563eb);
+  color: white;
+  font-weight: 800;
+  font-size: 2.1rem;
+  letter-spacing: -1px;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.18);
+}
+
+/* make aside stack nicely */
+aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* general spacing to prevent overlap */
+.panel { margin-bottom: 1rem }
+
+/* responsive tweaks */
+@media (max-width: 900px) {
+  .dashboard { grid-template-columns: 1fr }
+  .watt-counter { font-size: 1.6rem }
+}
 
 .chat { display:flex; flex-direction:column; height:307px }
 .chat-messages { flex:1; overflow:auto; padding:0.5rem; border:1px solid #f1f1f1; border-radius:6px; margin-bottom:0.5rem }
