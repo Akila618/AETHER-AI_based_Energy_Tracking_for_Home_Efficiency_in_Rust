@@ -17,3 +17,7 @@ ndarray = "0.15"
 futures-util = "0.3"
 tower-http = { version = "0.3", features = ["cors"] }
 
+# NLP helpers
+regex = "1.10"
+lazy_static = "1.4"
+

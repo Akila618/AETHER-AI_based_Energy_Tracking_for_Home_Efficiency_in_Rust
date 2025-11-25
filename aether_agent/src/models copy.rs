@@ -3,20 +3,32 @@ use ndarray::{Array1, Array2};
 use linfa_linear::{FittedIsotonicRegression, FittedLinearRegression, LinearRegression};
 use sqlx::{MySqlPool, pool, Row};
 use chrono::{NaiveDate, Utc, Datelike, Duration};
+//use supervised: linear regression model
+
+/* 
+
+> The agent will use a machine learning model (Linear Regression) to predict the total energy usage for a future time day or week  based on past usage patterns.
+> Predict the next month's energy consumption and cost based on historical data and provide recommendations for reducing usage during peak hours.   
+
+dataframe with historical data of appliance states, timestamps, and energy consumption (day, number of appliances on(x), total watts consumed(y))
+
+linear regression finds the best fit line through the data points to predict future energy consumption based on number of appliances on and time of day.
+
+*/
+
 use linfa::{
     traits::{Fit, Predict},
     DatasetBase,
     Error,
 };
-use ndarray::Axis;
 use serde_json::json;
 
 const LKR_PER_KWH: f64 = 3.0; 
 const SNAPSHOTS_PER_DAY: f64 = 48.0; 
 const SNAPSHOT_HOURS: f64 = 0.5; 
 
-//==============================================supervised: linear regression model====================================================
 
+// Use Box<dyn std::error::Error> for simplified error handling
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 // We use i64 for count fields as they come from the database
@@ -29,15 +41,15 @@ pub struct SnapshotData {
 
 pub struct TrainResult {
     pub model: FittedLinearRegression<f64>,
-    pub mean: Array1<f64>, 
-    pub std: Array1<f64>,  
+    pub mean: f64,
+    pub std: f64,
     pub avg_target: f64,
 }
 
 pub async fn train_model(pool: &MySqlPool) -> Result<TrainResult> {
     println!("[MODEL TRAINING]: Training energy consumption prediction model...");
     
-    // retireve data from db
+    // simulated_date and the total_daily_watts for forecasting based on date
     let history_data: Vec<SnapshotData> = sqlx::query_as::<_, SnapshotData>(
         "
         SELECT
@@ -62,54 +74,61 @@ pub async fn train_model(pool: &MySqlPool) -> Result<TrainResult> {
         return Err("Not enough historical data (less than 50 days) to train the model.".into());
     }
 
-    // creating X and Y arrays for feature selection
+    // convert date to numeric format
     let n_samples = history_data.len();
-    const N_FEATURES: usize = 2; 
+    let n_features = 1;
     
-    let mut features: Vec<f64> = Vec::with_capacity(n_samples * N_FEATURES);
+    let mut features: Vec<f64> = Vec::with_capacity(n_samples * n_features);
     let mut targets: Vec<f64> = Vec::with_capacity(n_samples);
     
     let epoch = NaiveDate::from_ymd_opt(1970, 1, 1).unwrap();
     
     for d in &history_data {
-        // Feature 1 (X1): Day
+        // Feature 1 (X): Days since epoch (numerical representation of the date)
         let date_num = d.simulated_date.signed_duration_since(epoch).num_days() as f64;
         features.push(date_num);
-        
-        // Feature 2 (X2): Day of Week (0=Sun, 6=Sat)
-        features.push(d.simulated_date.weekday().num_days_from_sunday() as f64); 
-        
-        // Target (Y): Total daily watts consumption
+
+        // Target (Y): Total watts consumption
         targets.push(d.total_daily_watts);
     }
 
-    // standardization of features
-    
-    let feature_arr_raw = Array2::from_shape_vec((n_samples, N_FEATURES), features.clone()).unwrap();
+    println!("[DEBUG] N_SAMPLES: {}", n_samples);
+    println!("[DEBUG] First 5 Features (DateNum): {:?}", &features[0..5]);
+    println!("[DEBUG] First 5 Targets (Watts): {:?}", &targets[0..5]);
+
+    let target_sum: f64 = targets.iter().sum();
+    if target_sum < 1.0 {
+        println!("[DEBUG] TARGET SUM IS ZERO. Check simulator or database insertion logic.");
+        return Err("Target data (Total Daily Watts) is zero.".into());
+    }
+
+    // standardize features to improve numerical stability
+    let mean = features.iter().sum::<f64>() / (n_samples as f64);
+    let variance = features.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (n_samples as f64);
+    let std = variance.sqrt().max(1e-8);
+    let standardized: Vec<f64> = features.iter().map(|v| (v - mean) / std).collect();
+
+    // create the input feature array (X) and target array (Y)
+    let x_arr = Array2::from_shape_vec((n_samples, n_features), standardized.clone()).unwrap();
     let y_arr = Array1::from_vec(targets.clone());
+    let dataset = DatasetBase::new(x_arr.clone(), y_arr.clone());
 
-    // calculate mean and standard deviation along x axis and apply standardization
-    let mean = feature_arr_raw.mean_axis(Axis(0)).unwrap();
-    let std = feature_arr_raw.std_axis(Axis(0), 1.0).mapv(|v| v.max(1e-8));
-    let standardized_x = (&feature_arr_raw - &mean) / &std;
-    
-    let avg_target = targets.iter().sum::<f64>() / (n_samples as f64);
-    
-    // traning model
-    let dataset = DatasetBase::new(standardized_x, y_arr);
-
+    // train the model
     let model = LinearRegression::default()
         .fit(&dataset)
         .expect("Failed to train linear regression model.");
 
-    println!("[DEBUG] N_SAMPLES: {}", n_samples);
-    println!("[DEBUG] Model Intercept: {:.2}", model.intercept());
-    println!("[MODEL TRAINING]: Training successful. Model ready.");
-    
+    // predict on training data to inspect fit quality
+    let train_preds = model.predict(&x_arr);
+    println!("[MODEL DEBUG] First 5 train predictions: {:?}", &train_preds.as_slice().unwrap()[0..5.min(train_preds.len())]);
+    println!("[MODEL DEBUG] First 5 train targets: {:?}", &y_arr.as_slice().unwrap()[0..5.min(y_arr.len())]);
+
+    let avg_target = target_sum / (n_samples as f64);
+    println!("[MODEL TRAINING]: Training successful. Model ready. mean={}, std={}, avg_target={}", mean, std, avg_target);
     Ok(TrainResult { model, mean, std, avg_target })
 }
 
-
+// function to get the number of days in a target month/year
 fn days_in_month(year: i32, month: u32) -> u32 {
     if month == 2 {
         // Check for leap year
@@ -126,35 +145,28 @@ fn days_in_month(year: i32, month: u32) -> u32 {
 }
 
 
-// predicts the total wattage
+// Predicts the total wattage consumption for a specific month (year, month)
 pub async fn run_prediction_for_month(pool: &MySqlPool, year: i32, month: u32) -> Result<String> {
-   
+    //get model and normalization stats)
     let train = train_model(pool).await?;
     let model = train.model;
     let mean = train.mean;
     let std = train.std;
 
-    
+    // determine the range and features for prediction
     let num_days = days_in_month(year, month);
     let epoch = NaiveDate::from_ymd_opt(1970, 1, 1).unwrap();
     let mut total_predicted_watts = 0.0;
 
-    const N_FEATURES: usize = 2;
-    let mut prediction_features: Vec<f64> = Vec::with_capacity((num_days as usize) * N_FEATURES);
+    let mut prediction_features: Vec<f64> = Vec::new();
 
     for day in 1..=num_days {
         let date = NaiveDate::from_ymd_opt(year, month, day).ok_or("Invalid date")?;
         let date_num = date.signed_duration_since(epoch).num_days() as f64;
-        let dow = date.weekday().num_days_from_sunday() as f64;
-
-        let standardized_date = (date_num - mean[0]) / std[0];
-        let standardized_dow = (dow - mean[1]) / std[1];
-
-        prediction_features.push(standardized_date);
-        prediction_features.push(standardized_dow);
+        prediction_features.push((date_num - mean) / std);
     }
 
-    let prediction_array = Array2::from_shape_vec((num_days as usize, N_FEATURES), prediction_features).unwrap();
+    let prediction_array = Array2::from_shape_vec((num_days as usize, 1), prediction_features).unwrap();
     let predictions = model.predict(&prediction_array);
     println!("[PREDICT] Year: {}, Month: {}, NumDays: {}", year, month, num_days);
     if num_days > 0 {
@@ -163,6 +175,7 @@ pub async fn run_prediction_for_month(pool: &MySqlPool, year: i32, month: u32) -
         println!("[PREDICT] Date Range: {} to {}", first_date, last_date);
     }
 
+    // aggregate the results (and print per-day values for debugging)
     for i in 0..num_days as usize {
         let raw_daily = predictions[i];
         let daily_watts = raw_daily.max(0.0);
@@ -189,6 +202,10 @@ pub async fn run_prediction_for_month(pool: &MySqlPool, year: i32, month: u32) -
 
 }
 
+/// Return a structured prediction as JSON value with numeric fields.
+
+
+/// Return a structured prediction as JSON value with numeric fields.
 pub async fn run_prediction_for_month_json(pool: &MySqlPool, year: i32, month: u32) -> Result<serde_json::Value> {
     let train = train_model(pool).await?;
     let model = train.model;
@@ -198,19 +215,14 @@ pub async fn run_prediction_for_month_json(pool: &MySqlPool, year: i32, month: u
     let num_days = days_in_month(year, month);
     let epoch = NaiveDate::from_ymd_opt(1970, 1, 1).unwrap();
 
-    const N_FEATURES: usize = 2;
-    let mut prediction_features: Vec<f64> = Vec::with_capacity((num_days as usize) * N_FEATURES);
+    let mut prediction_features: Vec<f64> = Vec::new();
     for day in 1..=num_days {
         let date = NaiveDate::from_ymd_opt(year, month, day).ok_or("Invalid date")?;
         let date_num = date.signed_duration_since(epoch).num_days() as f64;
-        let dow = date.weekday().num_days_from_sunday() as f64;
-        let standardized_date = (date_num - mean[0]) / std[0];
-        let standardized_dow = (dow - mean[1]) / std[1];
-        prediction_features.push(standardized_date);
-        prediction_features.push(standardized_dow);
+        prediction_features.push((date_num - mean) / std);
     }
 
-    let prediction_array = Array2::from_shape_vec((num_days as usize, N_FEATURES), prediction_features).unwrap();
+    let prediction_array = Array2::from_shape_vec((num_days as usize, 1), prediction_features).unwrap();
     let predictions = model.predict(&prediction_array);
 
     let mut total_predicted_watts = 0.0;

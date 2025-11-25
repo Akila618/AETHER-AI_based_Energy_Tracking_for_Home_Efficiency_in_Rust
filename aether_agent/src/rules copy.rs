@@ -26,7 +26,7 @@ pub async fn initialize_agent_lookup(mut rx: Receiver<AgentMsg>, bcast: broadcas
                     Some(msg) => {
                         println!("[AGENT] Received appliance state for ID: {} at sim_time: {}", msg.state.id, msg.sim_time);
                         println!("Update recieved: {:#?}", &msg);
-                        // =========================================================rules ======================================================
+                        // added rules here ---------------------------------------------------------------------------------
                         println!("[RULES]: Rule engine update recieved.");
                         // alert if bedroom light is on during daylight hours
                         if (&msg.state.name == "Bedroom Light") && *(&msg.state.is_on) {
@@ -39,11 +39,10 @@ pub async fn initialize_agent_lookup(mut rx: Receiver<AgentMsg>, bcast: broadcas
 
                         }
 
-                        // alert if AC is running during off-peak hours (match variants like "Living Room AC")
-                        let name_l = msg.state.name.to_lowercase();
-                        if (name_l.contains("air conditioner") || name_l.contains("ac")) && msg.state.is_on {
-                            if msg.sim_time.hour() >= 22 || msg.sim_time.hour() < 6 {
-                                println!("[AGENT ALERT]: Air Conditioner (or AC) is running during off-peak hours!");
+                        // alert if AC is running during off-peak hours
+                        if (&msg.state.name == "Air Conditioner") && *(&msg.state.is_on) {
+                            if *&msg.sim_time.hour() >= 22 || *&msg.sim_time.hour() < 6 {
+                                println!("[AGENT ALERT]: Air Conditioner is running during off-peak hours!");
                             }
                         }
 
@@ -127,23 +126,19 @@ pub async fn initialize_agent_lookup(mut rx: Receiver<AgentMsg>, bcast: broadcas
                             heavy_on.remove(&msg.state.name);
                         }
 
-                        // scheduling for washing machine / dryer during peak hours (use case-insensitive contains)
-                        if msg.state.is_on {
-                            let lower = msg.state.name.to_lowercase();
-                            if (lower.contains("washing") || lower.contains("washer") || lower.contains("washing machine") || lower.contains("dryer")) {
-                                let h = msg.sim_time.hour();
-                                if h >= 7 && h < 22 {
-                                    let m = format!("'{}' is running during peak hours ({}:00). Consider scheduling to off-peak to save cost.", msg.state.name, h);
-                                    println!("[AGENT SUGGESTION]: {}", m);
-                                    let payload = json!({"type":"recommendation","severity":"info","message":m, "appliance": msg.state.name, "sim_time": msg.sim_time.to_rfc3339()}).to_string();
-                                    if let Err(e) = bcast.send(payload) { println!("[BROADCAST] failed to send recommendation: {}", e); }
-                                }
+                        // scheduling for washing machine / dryer during off-peak
+                        if (msg.state.name == "Washing Machine" || msg.state.name == "Dryer") && msg.state.is_on {
+                            let h = msg.sim_time.hour();
+                            if h >= 7 && h < 22 {
+                                let m = format!("'{}' is running during peak hours ({}:00). Consider scheduling to off-peak to save cost.", msg.state.name, h);
+                                println!("[AGENT SUGGESTION]: {}", m);
+                                let payload = json!({"type":"recommendation","severity":"info","message":m, "appliance": msg.state.name, "sim_time": msg.sim_time.to_rfc3339()}).to_string();
+                                if let Err(e) = bcast.send(payload) { println!("[BROADCAST] failed to send recommendation: {}", e); }
                             }
                         }
 
                         // battery charging suggestion: prefer solar midday (10-16)
-                        let name_low = msg.state.name.to_lowercase();
-                        if (name_low.contains("charger") || name_low.contains("ev")) {
+                        if msg.state.name.contains("Charger") || msg.state.name.contains("EV") {
                             if msg.state.is_on {
                                 let h = msg.sim_time.hour();
                                 if h >= 10 && h <= 16 {
@@ -156,8 +151,8 @@ pub async fn initialize_agent_lookup(mut rx: Receiver<AgentMsg>, bcast: broadcas
                                     println!("[AGENT SUGGESTION]: {}", m);
                                     let payload = json!({
                                         "type":"recommendation",
-                                        "severity":"info","message":m,
-                                        "appliance": msg.state.name,
+                                        "severity":"info","message":m, 
+                                        "appliance": msg.state.name, 
                                         "sim_time": msg.sim_time.to_rfc3339()}).to_string();
                                     if let Err(e) = bcast.send(payload) { println!("[BROADCAST] failed to send ev suggestion: {}", e); }
                                 }
