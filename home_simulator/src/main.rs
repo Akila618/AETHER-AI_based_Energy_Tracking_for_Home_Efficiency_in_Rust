@@ -110,7 +110,7 @@ async fn main() {
     let (tx, rx) = mpsc::channel(150);
 
 
-    // spawn an async task for each appliance ---
+    // spawn an async task for each appliance
     for app_config in appliances_to_simulate {
         let tx_clone = tx.clone();
         tokio::spawn(async move {
@@ -118,7 +118,6 @@ async fn main() {
         });
     }
 
-    // drop the original sender so that when all cloned senders (in tasks) are dropped,
     drop(tx);
 
     // start the state collection & sending loop 
@@ -134,10 +133,8 @@ async fn run_collection_sender(
 ) {
     let client = connect_to_server().await;
 
-    // latest appliance state tracked by appliance id
     let mut household_state_map: HashMap<String, ApplianceState> = HashMap::new();
 
-    // send a complete report to the agent every 5 seconds
     let mut dispatch_timer = interval(Duration::from_secs(STATE_PASS_INTERVAL_SECS as u64));
     loop {
         tokio::select! {
