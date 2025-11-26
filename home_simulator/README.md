@@ -9,7 +9,6 @@ This repository contains the **`house_simulator` (the Client)**. Its job is to:
 4.  Bundle all appliance states into a single `HouseholdState` JSON payload.
 5.  Send this bundled report to the `smart_agent` server every 5 seconds.
 
-The companion `smart_agent` (Server) project is responsible for receiving this data and applying AI rules.
 
 ---
 

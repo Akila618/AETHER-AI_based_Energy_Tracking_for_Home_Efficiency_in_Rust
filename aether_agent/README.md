@@ -48,7 +48,6 @@ This README mirrors the structure and tone of the `house_simulator` README so de
       "monthly_cost": 987.65,
       "daily_watts": [ 345.0, 300.2, ... ]
     }
-  - Note: the prediction logic trains a simple linear model on daily aggregates. In development the handler sets liberal CORS headers for convenience; in production tighten origins and enable HTTPS.
 
 ---
 
@@ -77,55 +76,37 @@ cargo run
 
 ---
 
-## Debugging & testing tips
-
-- To reproduce rule scenarios, send crafted `HouseholdState` payloads to `POST /state` (e.g., multiple high-watt appliances to trigger `live_total` alerts).
-- Use `cargo check` to validate the Rust project. Fix compiler warnings and unused imports to keep the codebase clean.
-- Unit tests: consider adding tests around `rules.rs` by constructing `AgentMsg` inputs and asserting expected outputs.
-
----
-
 ## Useful files
 
 - `src/main.rs` - startup and routing
 - `src/rules.rs` - rules and broadcast logic
 - `src/models.rs` - prediction helpers
 
----
-
-If you'd like, I can also:
-- Add a short `examples/` folder with `curl` examples for `POST /state` and `GET /api/predictions`.
-- Add PowerShell run scripts mirroring `run_sim.ps1` to start the Agent with a default `.env`.
-
----
-
-Generated to match the `house_simulator` README style. Let me know if you want additional diagrams, example payloads, or a git commit & branch created.
-
 ```ascii
-+-------------------------------------------------------------------------+
-|                       PROGRAM: aether_agent                              |
-+=========================================================================+
-|                                                                         |
-|  +----------------------+      +-----------------------+      +--------+|
-|  |  HTTP Server (Axum)  | ---> |  Database (MySQL)     | <--- | Model  ||
-|  |  (/state, /api/...)  |      |  table: home_state    |      | Module ||
-|  +----------+-----------+      +-----------------------+      +---+----+|
-|             |                                                   ^    |
-|             | POST /state                                      /     |
-|             v                                              train /     |
-|  +----------------------+      mpsc::Sender      +----------------------+|
-|  |  Message Bus         | --------------------> |  Rules Engine (task)  ||
-|  |  (mpsc + broadcast)  |                       |  evaluates rules,     ||
-|  +----------+-----------+                       |  emits alerts/recs    ||
-|             |                                   +----------+-----------+||
-|             | broadcast JSON                              |           ||
-|             v                                             v           ||
-|  +----------------------+                                  +--------+  ||
-|  | WebSocket Handler    | <-----------------------------+  (broadcast::) ||
-|  |  (/ws) subscribes to |                                    sends JSON   ||
-|  |  broadcast channel   |                                    to clients   ||
-|  +----------------------+                                                   |
-|                                                                         |
-+--------------------AGENT COMPONENT INTERACTIONS--------------------------+
++---------------------------------------------------------------------------+
+|                       PROGRAM: aether_agent                               |
++=========================================================================+=|
+|                                                                           |
+|  +----------------------+      +-----------------------+      +--------+  |
+|  |  HTTP Server (Axum)  | ---> |  Database (MySQL)     | <--- | Model  |  |
+|  |  (/state, /api/...)  |      |  table: home_state    |      | Module |  |
+|  +----------+-----------+      +-----------------------+      +---+----+  |
+|             |                                                   ^         |
+|             | POST /state                                      /          |
+|             v                                              train          |
+|  +----------------------+      mpsc::Sender      +----------------------+ |
+|  |  Message Bus         | --------------------> |  Rules Engine (task)    |
+|  |  (mpsc + broadcast)  |                       |  evaluates rules,       |
+|  +----------+-----------+                       |  emits alerts/recs      |
+|             |                                   +----------+-----------+  |
+|             | broadcast JSON                              |               |
+|             v                                             v               |
+|  +----------------------+                                  +--------+     |
+|  | WebSocket Handler    | <-----------------------------+  (broadcast::)  |
+|  |  (/ws) subscribes to |                                    sends JSON   |
+|  |  broadcast channel   |                                    to clients   |
+|  +----------------------+                                                 |
+|                                                                           |
++--------------------AGENT COMPONENT INTERACTIONS---------------------------+
 
 ``` 

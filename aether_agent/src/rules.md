@@ -113,18 +113,3 @@ This document lists the active rules implemented in `aether_agent/src/rules.rs`.
 - Payload example: `{ type: "alert", severity: "warn", message, phantom_count, sim_time }
 
 ---
-
-## Notes, behavior & suggestions
-- Some early checks (AC off-peak, microwave continuous, refrigerator >300W) are currently `println!` logs and do not broadcast. There are other rules that broadcast similar conditions (e.g., sudden spike detection covers general spikes for any device and does broadcast).
-- `live_total` is always sent after the rule checks so the frontend has a frequent, accurate household total to render.
-- To avoid repeated identical alerts spamming the UI, consider adding a cooldown per-alert-type (e.g., suppress identical `type+appliance` alerts for N minutes) or deduplication with timestamps.
-- Severity mapping in frontend currently uses `warn` and `error` to style alerts; recommendations and info messages are rendered in the recommendations panel. You can tune the mapping or add more granular severities.
-
----
-
-If you want, I can:
-- Add cooldown/de-duplication logic to rules to reduce repeated alerts.
-- Convert log-only checks (AC, microwave, refrigerator) to broadcast messages.
-- Add unit tests for rule triggers using a small set of synthetic `AgentMsg` inputs.
-
-Created by automation on behalf of the developer.

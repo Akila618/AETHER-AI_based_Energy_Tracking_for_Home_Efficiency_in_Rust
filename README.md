@@ -51,7 +51,7 @@ The project requires three components to be launched independently in separate t
 
 ### Execution Steps
 
-1. Set Database URL: Ensure your MySQL connection string is correctly configured for the Agent (edit `aether_agent/src/main.rs` or replace the `DB_URL` constant with your credentials or use an environment configuration).
+1. Set Database URL: Ensure MySQL connection string is correctly configured for the Agent (edit `aether_agent/src/main.rs` or replace the `DB_URL` constant with credentials or use an environment configuration).
 
 2. Start the Agent (Server): This initiates the server, database connection pool, model training, and the periodic rule engine task.
 
@@ -83,15 +83,9 @@ npm run dev
 
 Once running, the Agent's console will log database insertions and rule evaluations, and the Web UI will display real-time wattage updates, alerts, predictions, and recommendations.
 
-## 4. API Endpoints (Selected)
+## 4. API Endpoints
 
 - `POST /state` — accepts a `HouseholdState` payload from the simulator (appliance snapshots). 
 - `GET /ws` — WebSocket endpoint; clients receive broadcasted JSON messages (`type`: `state`, `alert`, `recommendation`, `info`, `live_total`).
 - `POST /api/chat` — natural-language chat endpoint; accepts JSON `{ "query": "..." }` and replies with `{ "reply": "..." }`.
 - `GET /api/predictions?year=YYYY&month=M` — returns monthly forecast JSON (monthly_kwh, monthly_cost, daily_watts, ...).
-
-## 5. Development Notes & Tips
-
-- The rule engine uses heuristic matching on appliance names; simulator device naming should be consistent with rules (or rules can be made case-insensitive / substring-based).
-- If recommendations do not appear in the UI, ensure the Agent is broadcasting messages of type `recommendation` or `info` and the frontend WebSocket is connected.
-- Use the `aether_utils` crate types to ensure simulator and agent payloads remain compatible.
