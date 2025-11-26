@@ -95,5 +95,3 @@ Once running, the Agent's console will log database insertions and rule evaluati
 - The rule engine uses heuristic matching on appliance names; simulator device naming should be consistent with rules (or rules can be made case-insensitive / substring-based).
 - If recommendations do not appear in the UI, ensure the Agent is broadcasting messages of type `recommendation` or `info` and the frontend WebSocket is connected.
 - Use the `aether_utils` crate types to ensure simulator and agent payloads remain compatible.
-
-If you'd like, I can add example `curl`/PowerShell requests for quick testing, or create a small script to emit a sample `/state` payload for end-to-end verification.
