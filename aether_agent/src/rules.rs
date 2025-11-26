@@ -185,7 +185,7 @@ pub async fn initialize_agent_lookup(mut rx: Receiver<AgentMsg>, bcast: broadcas
                             if let Err(e) = bcast.send(payload) { println!("[BROADCAST] failed to send rapid increase alert: {}", e); }
                         }
 
-                        // 3) high load detection: count devices OFF but drawing > 5W
+                        // high load detection: count devices OFF but drawing > 5W
                         let phantom_count = latest_watts.iter().filter(|(id, watts)| {
                             if let Some(is_on) = latest_on.get(*id) {
                                 !*is_on && **watts > 5.0
