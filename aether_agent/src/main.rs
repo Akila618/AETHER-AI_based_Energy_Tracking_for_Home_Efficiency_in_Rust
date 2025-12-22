@@ -285,17 +285,27 @@ async fn chat_handler(State(state): State<AppState>, Json(payload): Json<ChatReq
     let intent = classify_intent(&q);
     match intent {
         ChatIntent::CountRunning => {
-            if let Some(ts) = latest_ts {
-                match sqlx::query("SELECT COUNT(*) AS cnt FROM home_state WHERE sim_timestamp = ? AND is_on = TRUE").bind(ts).fetch_one(&state.pool).await {
-                    Ok(r) => {
-                        let cnt: i64 = r.get::<i64, _>("cnt");
-                        let reply = format!("{} appliance(s) are running now.", cnt);
-                        return ([("Access-Control-Allow-Origin","*")], (StatusCode::OK, Json(json!({"reply": reply})))).into_response();
-                    }
-                    Err(e) => return ([("Access-Control-Allow-Origin","*")], (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"reply": format!("Query failed: {}", e)})))).into_response(),
+            match sqlx::query(
+                "SELECT COUNT(*) AS cnt FROM (
+                    SELECT id, is_on 
+                    FROM home_state 
+                    WHERE (id, sim_timestamp) IN (
+                        SELECT id, MAX(sim_timestamp) 
+                        FROM home_state 
+                        GROUP BY id
+                    )
+                ) AS latest 
+                WHERE is_on = TRUE"
+            ).fetch_one(&state.pool).await {
+                Ok(r) => {
+                    let cnt: i64 = r.get::<i64, _>("cnt");
+                    let reply = format!("{} appliance(s) are running now.", cnt);
+                    return ([("Access-Control-Allow-Origin","*")], (StatusCode::OK, Json(json!({"reply": reply})))).into_response();
                 }
-            } else {
-                return ([("Access-Control-Allow-Origin","*")], (StatusCode::OK, Json(json!({"reply": "No recent data available."})))).into_response();
+                Err(e) => {
+                    println!("[CHAT ERROR] Count running query failed: {}", e);
+                    return ([("Access-Control-Allow-Origin","*")], (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"reply": format!("Query failed: {}", e)})))).into_response();
+                }
             }
         }
 
